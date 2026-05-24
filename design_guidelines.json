@@ -1,0 +1,116 @@
+{
+  "theme": "Dark",
+  "archetype": "5 (Jewel & Luxury)",
+  "brand": {
+    "name": "Twin Cities Insurance",
+    "owner": "Muhammad Umar Ahmadzai",
+    "phone": "612-222-1749",
+    "email": "mumerahmadzai@gmail.com",
+    "location": "Twin Cities Metro Area (Minneapolis & Saint Paul, Minnesota)"
+  },
+  "colors": {
+    "background_gradient": "bg-gradient-to-br from-[#0B0F19] to-[#020408]",
+    "surface_glass": "bg-black/40",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#94A3B8",
+    "accent_primary": "#3B82F6",
+    "accent_hover": "#2563EB",
+    "border_default": "border-white/10",
+    "border_accent": "border-[#3B82F6]"
+  },
+  "typography": {
+    "font_heading": "Outfit",
+    "font_body": "Manrope",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight text-white",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight text-white",
+      "h3": "text-xl sm:text-2xl font-medium text-white",
+      "body": "text-base font-normal leading-relaxed text-[#94A3B8]",
+      "label": "text-sm uppercase tracking-[0.2em] text-[#94A3B8]"
+    }
+  },
+  "surfaces": {
+    "glass_card": "bg-[#0B0F19]/60 backdrop-blur-xl border border-[#3B82F6] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+    "glass_badge": "bg-white/5 backdrop-blur-md border border-white/10 rounded-full",
+    "glass_modal": "bg-[#0B0F19]/90 backdrop-blur-2xl border border-[#3B82F6]/50 rounded-3xl shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
+  },
+  "spacing_and_layout": {
+    "general": "Generous padding, p-6 to p-12 inside containers.",
+    "portfolio_grid": "grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8",
+    "page_layout": "40% hero section, 60% portfolio grid below it."
+  },
+  "motion": {
+    "interactive_elements": "transition-all duration-300 ease-out",
+    "hover_cards": "hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(59,130,246,0.15)]",
+    "3d_hero": "Subtle cursor-tracked Y-axis rotation on the limousine model using framer-motion-3d or @react-spring/three. Continuous floating effect for badges."
+  },
+  "components_and_sections": {
+    "section_1_hero": {
+      "type": "3D Canvas Hero",
+      "3d_specs": "Low-poly limousine using Three.js primitives (BoxGeometry, CylinderGeometry), glossy metallic black material (MeshPhysicalMaterial with high metalness/low roughness), electric blue rim light (PointLight or SpotLight). No external GLB.",
+      "badges": [
+        "MN Stat. § 168.128 Compliant ($1.5M Liability Required)",
+        "Direct MnDOT Form E Filing Integration"
+      ],
+      "content": {
+        "headline": "Minnesota's Premier Livery & Limousine Insurance",
+        "subheadline": "Guaranteed $1.5M liability limits, instant MnDOT Form E filings, premium physical damage protection.",
+        "cta": "Initiate Fleet Valuation"
+      }
+    },
+    "section_2_portfolio": {
+      "type": "2-Column Grid",
+      "categories": {
+        "commercial": [
+          "BOP",
+          "Workers Comp",
+          "Inland Marine & Cargo"
+        ],
+        "personal": [
+          "MN No-Fault Auto",
+          "Homeowners & Renters",
+          "Personal Umbrella Liability"
+        ]
+      },
+      "card_style": "Dark mode glassmorphic cards with 1px electric blue border. Use Lucide icons matching each coverage type (e.g., Briefcase, Shield, Car, Home)."
+    },
+    "section_3_modal": {
+      "type": "Multi-step Quote Modal",
+      "steps": [
+        {
+          "step": 1,
+          "name": "Risk Selection",
+          "inputs": "Grid options: [Limousine/Livery Fleet], [Small Business Lines], [Home & Auto Bundle]"
+        },
+        {
+          "step": 2,
+          "name": "Business Details",
+          "inputs": "Legal Business Name, Minnesota Zip Code, optional DOT Number"
+        },
+        {
+          "step": 3,
+          "name": "Contact Info",
+          "inputs": "Primary Contact, Phone, Email"
+        }
+      ],
+      "success_state": "Application Received Securely. Principal Agent Muhammad Umar Ahmadzai is reviewing..."
+    },
+    "section_4_footer": {
+      "type": "Minimal Compliance Footer",
+      "content": "Phone: 612-222-1749 | Email: mumerahmadzai@gmail.com — Minnesota Dept of Commerce compliance text.",
+      "style": "py-12 border-t border-white/10 text-sm text-[#94A3B8] text-center"
+    }
+  },
+  "testing": {
+    "requirements": "All interactive elements, forms, and cards MUST include data-testid attributes."
+  },
+  "instructions_to_main_agent": [
+    "Install lucide-react for icons.",
+    "Install three, @react-three/fiber, @react-three/drei, and framer-motion.",
+    "Ensure the hero uses ONLY Three.js primitives for the limousine. Use a Group of BoxGeometries and CylinderGeometries for the body and wheels. Add a blue PointLight for the rim light effect.",
+    "Do NOT use external images or 3D models; everything must be generated natively via code.",
+    "Apply data-testid to the CTA button, modal inputs, modal steps, and portfolio cards.",
+    "The multi-step modal must use framer-motion for smooth step transitions.",
+    "Ensure the application layout strictly follows: 40% height for Hero and 60% for the Portfolio Grid below it."
+  ]
+}

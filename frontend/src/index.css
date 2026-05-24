@@ -2,114 +2,411 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --tci-bg-1: #050505;
+    --tci-bg-2: #000000;
+    --tci-text: #ffffff;
+    --tci-muted: #e5c158;
+    --tci-accent: #d4af37;
+    --tci-accent-hover: #f1d171;
+    --tci-accent-dark: #8a6d1a;
+}
+
+html,
+body,
+#root {
+    background: radial-gradient(
+            1200px 800px at 80% -10%,
+            rgba(212, 175, 55, 0.07),
+            transparent 60%
+        ),
+        linear-gradient(180deg, var(--tci-bg-1) 0%, var(--tci-bg-2) 100%);
+    min-height: 100%;
+    color: var(--tci-text);
+}
+
 body {
     margin: 0;
     font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        "Manrope",
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
-code {
-    font-family:
-        source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+.font-heading {
+    font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
 }
 
-@layer base {
-    :root {
-        --background: 0 0% 100%;
-        --foreground: 0 0% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 0 0% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 0 0% 3.9%;
-        --primary: 0 0% 9%;
-        --primary-foreground: 0 0% 98%;
-        --secondary: 0 0% 96.1%;
-        --secondary-foreground: 0 0% 9%;
-        --muted: 0 0% 96.1%;
-        --muted-foreground: 0 0% 45.1%;
-        --accent: 0 0% 96.1%;
-        --accent-foreground: 0 0% 9%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 89.8%;
-        --input: 0 0% 89.8%;
-        --ring: 0 0% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-    }
-    .dark {
-        --background: 0 0% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 0 0% 3.9%;
-        --card-foreground: 0 0% 98%;
-        --popover: 0 0% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
-        --primary-foreground: 0 0% 9%;
-        --secondary: 0 0% 14.9%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 0 0% 14.9%;
-        --muted-foreground: 0 0% 63.9%;
-        --accent: 0 0% 14.9%;
-        --accent-foreground: 0 0% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 14.9%;
-        --input: 0 0% 14.9%;
-        --ring: 0 0% 83.1%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%;
-    }
+.font-mono-label {
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
 }
 
-@layer base {
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
+::selection {
+    background: rgba(59, 130, 246, 0.35);
+    color: #ffffff;
 }
 
-@layer base {
-    [data-debug-wrapper="true"] {
-        display: contents !important;
-    }
+/* Glassmorphic surfaces */
+.glass-card {
+    background: rgba(8, 8, 8, 0.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    transition:
+        transform 350ms ease,
+        box-shadow 350ms ease,
+        border-color 350ms ease;
+}
+.glass-card:hover {
+    border-color: rgba(212, 175, 55, 0.9);
+    box-shadow:
+        0 24px 60px rgba(212, 175, 55, 0.18),
+        0 0 0 1px rgba(212, 175, 55, 0.6),
+        inset 0 0 60px rgba(212, 175, 55, 0.04);
+}
 
-    [data-debug-wrapper="true"] > * {
-        margin-left: inherit;
-        margin-right: inherit;
-        margin-top: inherit;
-        margin-bottom: inherit;
-        padding-left: inherit;
-        padding-right: inherit;
-        padding-top: inherit;
-        padding-bottom: inherit;
-        column-gap: inherit;
-        row-gap: inherit;
-        gap: inherit;
-        border-left-width: inherit;
-        border-right-width: inherit;
-        border-top-width: inherit;
-        border-bottom-width: inherit;
-        border-left-style: inherit;
-        border-right-style: inherit;
-        border-top-style: inherit;
-        border-bottom-style: inherit;
-        border-left-color: inherit;
-        border-right-color: inherit;
-        border-top-color: inherit;
-        border-bottom-color: inherit;
+.glass-badge {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+}
+
+.glass-modal {
+    background: rgba(5, 5, 5, 0.94);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    border-radius: 1.75rem;
+    box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(212, 175, 55, 0.18);
+}
+
+/* Metallic gold CTA — fills solid gold w/ black text on hover */
+.btn-accent {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--tci-accent);
+    color: #ffffff;
+    background: linear-gradient(
+        180deg,
+        rgba(212, 175, 55, 0.16),
+        rgba(212, 175, 55, 0.04)
+    );
+    transition:
+        transform 250ms ease,
+        box-shadow 250ms ease,
+        background 250ms ease,
+        color 250ms ease;
+    box-shadow:
+        0 0 0 1px rgba(212, 175, 55, 0.25),
+        0 10px 40px rgba(212, 175, 55, 0.22);
+    font-family: "Outfit", sans-serif;
+    letter-spacing: 0.02em;
+}
+.btn-accent:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, #f1d171 0%, #d4af37 100%);
+    color: #050505;
+    border-color: #f1d171;
+    box-shadow:
+        0 0 0 1px rgba(212, 175, 55, 0.9),
+        0 18px 60px rgba(212, 175, 55, 0.55);
+}
+.btn-accent:hover svg {
+    color: #050505;
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: #fff;
+    background: transparent;
+    transition: all 200ms ease;
+}
+.btn-ghost:hover {
+    border-color: var(--tci-accent);
+    color: var(--tci-accent);
+}
+
+/* Subtle grain overlay */
+.grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+    mix-blend-mode: overlay;
+}
+
+/* Hero canvas container — FIXED to viewport so the 3D scene persists across scroll */
+.hero-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: auto;
+}
+
+/* Float animation for badges */
+@keyframes float-y {
+    0%,
+    100% {
+        transform: translateY(0px);
     }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+.animate-float {
+    animation: float-y 6s ease-in-out infinite;
+}
+
+/* Input styles */
+.tci-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: #fff;
+    border-radius: 0.85rem;
+    padding: 0.85rem 1rem;
+    transition: all 200ms ease;
+    font-family: "Manrope", sans-serif;
+}
+.tci-input::placeholder {
+    color: rgba(229, 193, 88, 0.55);
+}
+.tci-input:focus {
+    outline: none;
+    border-color: var(--tci-accent);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+/* Risk option button */
+.risk-option {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    background: rgba(255, 255, 255, 0.015);
+    color: #fff;
+    transition: all 200ms ease;
+}
+.risk-option:hover {
+    border-color: var(--tci-accent);
+    background: rgba(212, 175, 55, 0.07);
+    transform: translateX(4px);
+}
+.risk-option[data-selected="true"] {
+    border-color: var(--tci-accent);
+    background: rgba(212, 175, 55, 0.13);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.45);
+}
+
+/* Marquee divider */
+.divider-line {
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(212, 175, 55, 0.55),
+        transparent
+    );
+}
+
+/* ============ Mini-Metropolis Scene Labels ============ */
+.scene-label {
+    pointer-events: none;
+    text-align: center;
+    font-family: "Outfit", sans-serif;
+    user-select: none;
+    background: rgba(5, 5, 5, 0.72);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    border-radius: 0.6rem;
+    padding: 0.32rem 0.7rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+    white-space: nowrap;
+}
+.scene-label__title {
+    color: #f1d171;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+.scene-label__sub {
+    color: #e5c158;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.1rem;
+}
+
+/* ============ 3D Satellite Chips ============ */
+.satellite-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(5, 5, 5, 0.78);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    color: #ffffff;
+    font-family: "Outfit", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+        0 6px 24px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(212, 175, 55, 0.15);
+    transition:
+        transform 280ms ease,
+        background 280ms ease,
+        border-color 280ms ease,
+        box-shadow 280ms ease;
+    white-space: nowrap;
+    user-select: none;
+}
+.satellite-chip:hover,
+.satellite-chip--hover {
+    background: rgba(212, 175, 55, 0.14);
+    border-color: rgba(241, 209, 113, 0.95);
+    box-shadow:
+        0 14px 50px rgba(212, 175, 55, 0.35),
+        0 0 0 1px rgba(241, 209, 113, 0.85);
+    transform: translateY(-2px);
+}
+.satellite-chip__icon {
+    height: 24px;
+    width: 24px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.18);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4af37;
+    flex-shrink: 0;
+}
+.satellite-chip:hover .satellite-chip__icon,
+.satellite-chip--hover .satellite-chip__icon {
+    background: #d4af37;
+    color: #050505;
+    border-color: #f1d171;
+}
+.satellite-chip__label {
+    color: #ffffff;
+    font-weight: 500;
+}
+.satellite-chip:hover .satellite-chip__label,
+.satellite-chip--hover .satellite-chip__label {
+    color: #f1d171;
+}
+.satellite-chip__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 220px;
+    max-width: 260px;
+    padding: 0.85rem 1rem;
+    background: rgba(5, 5, 5, 0.94);
+    border: 1px solid rgba(212, 175, 55, 0.7);
+    border-radius: 0.85rem;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(212, 175, 55, 0.25);
+    white-space: normal;
+    pointer-events: none;
+    animation: chip-panel-in 250ms ease-out;
+}
+@keyframes chip-panel-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -6px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+.satellite-chip__panel-title {
+    font-family: "Outfit", sans-serif;
+    font-weight: 500;
+    color: #f1d171;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+.satellite-chip__panel-desc {
+    color: #e5c158;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin-bottom: 0.55rem;
+}
+.satellite-chip__panel-cta {
+    font-family: "Outfit", sans-serif;
+    font-size: 0.72rem;
+    color: #d4af37;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Hint badge for drag interaction */
+.drag-hint {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Manrope", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(229, 193, 88, 0.65);
+    pointer-events: none;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.drag-hint::before,
+.drag-hint::after {
+    content: "";
+    height: 1px;
+    width: 26px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(212, 175, 55, 0.6),
+        transparent
+    );
 }
