@@ -1,60 +1,70 @@
 # Twin Cities Insurance — PRD
 
 ## Original Problem Statement
-Import the existing project from the GitHub repo `mumerahmadzai/Twincitiesinsurance`
-into this Emergent workspace and bring services up.
-
-Underlying app: Responsive insurance brokerage landing page for **Twin Cities
-Insurance** (principal: Muhammad Umar Ahmadzai, phone 612-222-1749, email
-mumerahmadzai@gmail.com) serving the Twin Cities (Minneapolis & Saint Paul)
-Metro. Stack: React Three Fiber, Framer Motion, Tailwind, FastAPI, MongoDB,
-JWT admin auth + tokenized carrier share links.
-
-## User Choices (locked 2026-02)
-- Quote routing: **MongoDB-only storage** (no SMTP/email yet).
-- 3D limousine: **stylized low-poly using Three.js primitives** (no external GLB).
-- Quote persistence: every submission stored in MongoDB.
-- Admin auth: JWT, 12 h access TTL, 72 h share TTL.
+Insurance brokerage landing page for **Twin Cities Insurance** (Principal Agent
+Muhammad Umar Ahmadzai, 612-222-1749, mumerahmadzai@gmail.com), Minneapolis &
+Saint Paul metro. The May-2026 session imported the existing repo, then made
+the site truly publish-ready: real email notifications, anti-spam, hardened
+secrets, legal pages, SEO. Stack: React + Three.js + Framer Motion + Tailwind,
+FastAPI + MongoDB + JWT, Resend for transactional email.
 
 ## Architecture
 - **Backend** (`/app/backend/server.py`)
-  - `GET /api/` — service status
-  - `GET /api/health` — Mongo ping
-  - `POST /api/auth/login` — admin email/password → JWT
-  - `GET /api/auth/me` — current admin
-  - `POST /api/quotes` — public quote submission
-  - `GET /api/quotes` — admin list (auth required)
-  - `GET /api/quotes/{id}` — single quote (auth required)
-  - `POST /api/quotes/{id}/share-link` — issue tokenized carrier link
-  - `GET /api/share/{token}` — public carrier-safe view
+  - `GET  /api/`              service status
+  - `GET  /api/health`        Mongo ping
+  - `POST /api/auth/login`    admin email/password → JWT (12 h)
+  - `GET  /api/auth/me`       current admin (auth)
+  - `POST /api/quotes`        public quote submit
+      • honeypot field `website` → silent discard
+      • per-IP sliding window rate limit (20/hr, configurable)
+      • fire-and-forget Resend email to admin (throttled w/ retry on 429)
+      • optional customer confirmation email when `SEND_CUSTOMER_CONFIRMATION=true`
+  - `GET  /api/quotes`        admin list (auth)
+  - `GET  /api/quotes/{id}`   single (auth)
+  - `POST /api/quotes/{id}/share-link`  carrier tokenized URL (auth, 72 h)
+  - `GET  /api/share/{token}`  public carrier-safe view
 - **Frontend**
-  - `/` Landing (Hero3D + Portfolio + QuoteModal + Footer)
-  - `/admin/login` — JWT login
-  - `/admin` — quote pipeline + share-link generator
-  - `/share/:token` — public carrier view
+  - `/`              Landing (Hero3D + Portfolio + QuoteModal w/ honeypot)
+  - `/admin/login`   JWT login
+  - `/admin`         Quote pipeline + CSV export + share-link generator
+  - `/share/:token`  Public carrier view
+  - `/privacy`       Minnesota-compliant privacy policy
+  - `/terms`         Minnesota-compliant terms of service
+- **Static SEO**
+  - `/sitemap.xml`, `/robots.txt`, `og:` / `twitter:` meta,
+    schema.org `InsuranceAgency` JSON-LD, real favicon
 
-## Implemented (imported 2026-05)
-- Full repo restored from GitHub into `/app`
-- Backend `.env` reconstructed with `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
-  (protected `MONGO_URL` / `DB_NAME` preserved)
-- Python deps installed, yarn deps installed
-- Admin user seeded on startup (`mumerahmadzai@gmail.com`)
-- Smoke-tested: `/api/`, `/api/health`, `/api/quotes` POST, `/api/auth/login`,
-  authenticated `/api/quotes` list — all 200 OK
-- Frontend compiled and served at the preview URL (200 OK)
+## Implemented (2026-05 session)
+- Resend transactional email integration (real key) with semaphore throttle
+  + retry-on-429 (`Email sent to mumerahmadzai@gmail.com (id=...)` confirmed)
+- Anti-spam: hidden `website` honeypot + per-IP sliding window rate limit
+- Hardened secrets: regenerated `JWT_SECRET`, set strong admin password
+- Privacy + Terms pages (MN-compliant)
+- SEO: meta, OpenGraph, Twitter Card, schema.org `InsuranceAgency`, sitemap,
+  robots, favicon
+- Analytics scaffolding (GA4 + Plausible) auto-activate when env vars are set
+- Google API key stored as `GOOGLE_API_KEY` for future Maps/Places usage
+- 25/25 backend pytest tests passing on live preview URL
+
+## Pending before production launch
+1. **Deploy** via the Emergent **Deploy** button (or Vercel/Railway).
+2. Provision **MongoDB Atlas** cluster + set `MONGO_URL` in deployment env.
+3. Buy/verify domain (e.g. `twincitiesinsurance.com`) and:
+   - point DNS to the deployment
+   - verify the domain in Resend → flip `RESEND_FROM` to `quotes@<domain>`
+   - flip `SEND_CUSTOMER_CONFIRMATION=true`
+4. **Rotate** the Resend key that was pasted in chat.
+5. **Restrict** the Google API key in Google Cloud Console (HTTP referrer +
+   API restrictions).
+6. Optionally turn on analytics by setting `REACT_APP_GA4_ID` or
+   `REACT_APP_PLAUSIBLE_DOMAIN` in frontend `.env`.
 
 ## Backlog
 ### P1
-- Email delivery (Resend / SendGrid) on `POST /api/quotes`
-- Admin "mark as quoted / bound" status transitions + agent notes
-- SEO meta + OpenGraph card + `InsuranceAgency` schema.org markup
+- Quote status transitions (received → quoted → bound) + agent notes
+- Reply-to in admin notifications set to the customer's email (one-click reply)
 ### P2
-- Stripe "Bind Now" deposit checkout
-- Carrier appointment badges / testimonials
-- E&O / W-9 document upload endpoint for the admin
-
-## Next Tasks
-1. Confirm with user whether they want any new features built on top of the
-   imported codebase, or just a clean import.
-2. Wire an email provider (Resend) once a key is supplied.
-3. Add SEO + OG metadata.
+- Stripe "Bind Now" deposit checkout for limousine fleet quotes
+- Carrier appointment badges / testimonials on landing
+- Persist Resend outbox to Mongo for guaranteed delivery on burst > 3 req/sec
+- Move rate-limit bucket to Redis when scaling beyond single replica

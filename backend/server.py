@@ -37,6 +37,9 @@ QUOTE_RATE_LIMIT_PER_HOUR = int(os.environ.get("QUOTE_RATE_LIMIT_PER_HOUR", "20"
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
+# Bound concurrent Resend calls (free tier = 5 req/sec). 3 keeps us safely under.
+_resend_semaphore = asyncio.Semaphore(3)
+
 app = FastAPI(title="Twin Cities Insurance API")
 api_router = APIRouter(prefix="/api")
 
@@ -259,12 +262,24 @@ async def _send_email_safe(to: str, subject: str, html: str) -> None:
     if not RESEND_API_KEY:
         logger.info("RESEND_API_KEY not configured — skipping email to %s", to)
         return
-    try:
+    # Throttle to stay under Resend's 5 req/sec limit, with retry on 429
+    async with _resend_semaphore:
         params = {"from": RESEND_FROM, "to": [to], "subject": subject, "html": html}
-        result = await asyncio.to_thread(resend.Emails.send, params)
-        logger.info("Email sent to %s (id=%s)", to, result.get("id") if isinstance(result, dict) else result)
-    except Exception as e:
-        logger.warning("Resend send failed for %s: %s", to, e)
+        for attempt in range(3):
+            try:
+                result = await asyncio.to_thread(resend.Emails.send, params)
+                logger.info("Email sent to %s (id=%s)", to, result.get("id") if isinstance(result, dict) else result)
+                return
+            except Exception as e:
+                msg = str(e).lower()
+                is_rate = "429" in msg or "too many" in msg or "rate" in msg
+                if is_rate and attempt < 2:
+                    backoff = 0.6 * (attempt + 1)
+                    logger.info("Resend 429 to %s — retrying in %.1fs (attempt %d/3)", to, backoff, attempt + 1)
+                    await asyncio.sleep(backoff)
+                    continue
+                logger.warning("Resend send failed for %s: %s", to, e)
+                return
 
 
 async def _fire_quote_emails(q: Quote) -> None:
