@@ -2,20 +2,120 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="icon" type="image/png" href="%PUBLIC_URL%/brand/emblem.png" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/brand/emblem.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0B0F19" />
+
+        <title>Twin Cities Insurance — Livery, Fleet &amp; P&amp;C Brokerage in Minneapolis &amp; Saint Paul</title>
         <meta
             name="description"
-            content="Twin Cities Insurance — Minnesota's premier Livery & Limousine insurance with $1.5M liability limits and instant MnDOT Form E filings."
+            content="Minnesota's premier Property &amp; Casualty brokerage. Limousine &amp; livery fleet insurance with $1.5M liability, instant MnDOT Form E filings, plus BOP, workers' comp, home &amp; auto. Principal Agent Muhammad Umar Ahmadzai — 612-222-1749."
         />
+        <meta
+            name="keywords"
+            content="Minneapolis insurance, Saint Paul insurance, limousine insurance Minnesota, livery insurance, MnDOT Form E, fleet insurance, BOP, workers comp, home insurance Minnesota, auto insurance Twin Cities, Twin Cities Insurance, Muhammad Umar Ahmadzai"
+        />
+        <meta name="author" content="Twin Cities Insurance" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://limousine-estimator.preview.emergentagent.com/" />
+
+        <!-- Open Graph / Facebook / LinkedIn -->
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Twin Cities Insurance" />
+        <meta property="og:url" content="https://limousine-estimator.preview.emergentagent.com/" />
+        <meta
+            property="og:title"
+            content="Twin Cities Insurance — Livery, Fleet &amp; P&amp;C Brokerage"
+        />
+        <meta
+            property="og:description"
+            content="Minneapolis &amp; Saint Paul's premier P&amp;C brokerage. Limousine fleets, BOP, workers' comp, home &amp; auto — affordable premiums, $1.5M liability, instant MnDOT Form E."
+        />
+        <meta property="og:image" content="https://limousine-estimator.preview.emergentagent.com/brand/emblem.png" />
+        <meta property="og:image:alt" content="Twin Cities Insurance gold emblem" />
+        <meta property="og:locale" content="en_US" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Twin Cities Insurance — Livery &amp; P&amp;C Brokerage" />
+        <meta
+            name="twitter:description"
+            content="Minnesota's premier P&amp;C brokerage. $1.5M liability, MnDOT Form E, BOP, home &amp; auto. 612-222-1749."
+        />
+        <meta name="twitter:image" content="https://limousine-estimator.preview.emergentagent.com/brand/emblem.png" />
+
+        <!-- Schema.org InsuranceAgency -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "InsuranceAgency",
+                "name": "Twin Cities Insurance",
+                "url": "https://limousine-estimator.preview.emergentagent.com/",
+                "logo": "https://limousine-estimator.preview.emergentagent.com/brand/emblem.png",
+                "image": "https://limousine-estimator.preview.emergentagent.com/brand/emblem.png",
+                "telephone": "+1-612-222-1749",
+                "email": "mumerahmadzai@gmail.com",
+                "areaServed": [
+                    { "@type": "City", "name": "Minneapolis" },
+                    { "@type": "City", "name": "Saint Paul" },
+                    { "@type": "State", "name": "Minnesota" }
+                ],
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Minneapolis",
+                    "addressRegion": "MN",
+                    "addressCountry": "US"
+                },
+                "founder": {
+                    "@type": "Person",
+                    "name": "Muhammad Umar Ahmadzai",
+                    "jobTitle": "Principal Agent"
+                },
+                "makesOffer": [
+                    { "@type": "Offer", "name": "Limousine / Livery Fleet Insurance" },
+                    { "@type": "Offer", "name": "Business Owner's Policy (BOP)" },
+                    { "@type": "Offer", "name": "Workers' Compensation" },
+                    { "@type": "Offer", "name": "Inland Marine & Cargo" },
+                    { "@type": "Offer", "name": "Minnesota No-Fault Auto" },
+                    { "@type": "Offer", "name": "Homeowners & Renters" },
+                    { "@type": "Offer", "name": "Personal Umbrella Liability" }
+                ]
+            }
+        </script>
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <title>Twin Cities Insurance — Livery & P&C Brokerage</title>
+
+        <!-- Analytics: activated when env vars are set -->
+        <script>
+            (function () {
+                var ga4 = "%REACT_APP_GA4_ID%";
+                if (ga4 && ga4.indexOf("REACT_APP_") !== 0 && ga4.length > 3) {
+                    var s = document.createElement("script");
+                    s.async = true;
+                    s.src = "https://www.googletagmanager.com/gtag/js?id=" + ga4;
+                    document.head.appendChild(s);
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag() { window.dataLayer.push(arguments); }
+                    window.gtag = gtag;
+                    gtag("js", new Date());
+                    gtag("config", ga4);
+                }
+                var plausible = "%REACT_APP_PLAUSIBLE_DOMAIN%";
+                if (plausible && plausible.indexOf("REACT_APP_") !== 0 && plausible.length > 3) {
+                    var p = document.createElement("script");
+                    p.defer = true;
+                    p.setAttribute("data-domain", plausible);
+                    p.src = "https://plausible.io/js/script.js";
+                    document.head.appendChild(p);
+                }
+            })();
+        </script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>

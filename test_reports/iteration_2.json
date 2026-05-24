@@ -1,0 +1,32 @@
+{
+  "summary": "Backend regression of all session features: 25/25 pytest tests pass on the live preview URL. Verified: health, JWT admin login with new credentials, /auth/me, quote CRUD (incl. validation), authenticated GET /api/quotes (401 without token, 200 with), honeypot silent-discard (NOT persisted, count unchanged), per-IP rate limit (20 allowed, 21st returns 429), share-link generation (401 unauth, token+expires_at when auth, 404 on missing quote), public /api/share/{token} returns CarrierQuote (no internal id) and rejects garbage tokens with 400. Resend admin email confirmed firing — backend log shows multiple 'Email sent to mumerahmadzai@gmail.com (id=...)' entries with real Resend message IDs. SEND_CUSTOMER_CONFIRMATION=false respected (no customer email sent).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/quotes (email side-effect)", "issue": "Resend's per-account 5 req/sec limit gets exceeded during legitimate bursts: during the 20-request rate-limit test, ~8 admin notifications were dropped with 'Resend send failed: Too many requests'. The HTTP response to the user is still 201 (good resilience), but admin notifications are silently lost. No retry/backoff or outbox queue exists in _fire_quote_emails."}
+    ]
+  },
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_quotes_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Consider throttling/queuing Resend calls in _fire_quote_emails to stay within Resend's 5 req/sec limit, OR retry on 429 with backoff, OR persist failed sends to an outbox collection for replay. Currently a sustained burst of legitimate quotes will lose admin email notifications (HTTP 201 is still returned to user, so they think submission succeeded)."
+  ],
+  "critical_code_review_comments": [
+    "_fire_quote_emails: no retry on Resend 429. Bursts above 5 req/sec lose admin notifications silently. Add a per-process asyncio.Semaphore + sleep, or an outbox/retry pattern.",
+    "Honeypot path returns a random UUID id for the silent-discard response (server.py:333). Harmless, but means client receives an 'id' that does not exist anywhere — fine for spam, just worth documenting.",
+    "Rate limit bucket is in-memory only (_quote_hits defaultdict). On backend restart the counter resets, and behind multiple replicas each pod has its own bucket. For a single-replica deployment this is fine; flag for future multi-replica/load-balanced setup → move to Redis or shared store.",
+    "X-Forwarded-For is read as-is and the first value is trusted (server.py:54). In this preview environment that's acceptable (ingress is the only ingress path), but in a multi-hop production deployment behind additional proxies this could let a client spoof its IP and bypass rate limits. Document trusted-proxy assumptions.",
+    "created_at is persisted as ISO string and re-parsed on read — mixing types in Mongo can break native datetime queries. Standardize on native datetime (pre-existing carry-over from iteration 1)."
+  ],
+  "updated_files": ["/app/backend/tests/test_quotes_api.py"],
+  "success_rate": {"backend": "100% (25/25)", "frontend": "not tested (out of scope)"},
+  "test_credentials": "Admin: mumerahmadzai@gmail.com / Gpy*5sVXJUY*ix0ZrZTg (read from /app/memory/test_credentials.md and /app/backend/.env). Login returns 200 + JWT.",
+  "seed_data_creation": "Tests created ~30 TEST_-prefixed quotes (TEST_Acme Limo LLC, TEST_RL_0..20, TEST_HONEYPOT_BOT_LLC). The honeypot quote is verified NOT persisted. The other TEST_ quotes are persisted and visible via authenticated GET /api/quotes.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All in-scope backend behavior for this session works correctly. Resend integration is REAL (not mocked) — verify by grepping /var/log/supervisor/backend.err.log for 'Email sent to mumerahmadzai@gmail.com (id=...)'. The honeypot field is named 'website' on POST /api/quotes; sending any truthy value returns 201 but the quote is silently dropped (logged as 'Honeypot tripped from <ip>'). The per-IP rate limit reads X-Forwarded-For (first entry) — tests use a unique XFF IP per scenario to avoid cross-test contamination. GET /api/quotes is now AUTHENTICATED — previous iteration's unauthenticated GET test was rewritten accordingly. Only soft issue worth follow-up is the Resend 5 req/sec rate limit silently dropping admin notifications during bursts.",
+  "rca of the issue": "N/A — no functional bugs found. Soft issue (Resend 429 dropping notifications) RCA: _fire_quote_emails uses fire-and-forget asyncio.create_task with no retry/backoff/throttle; when N>5 quotes/sec arrive, Resend returns 429 and the warning is logged but the email is permanently lost. Mitigation: wrap _send_email_safe in an asyncio.Semaphore(4) + asyncio.sleep gate, OR catch 429 and retry with exponential backoff, OR write failed sends to a Mongo 'email_outbox' collection and drain it from a background worker."
+}

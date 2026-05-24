@@ -86,12 +86,16 @@ export default function QuoteModal({ open, onClose, initialRisk = "" }) {
         onClose();
     };
 
+    // Hidden honeypot field — humans never see/fill it, bots will → backend silently rejects
+    const [honeypot, setHoneypot] = useState("");
+
     const handleSubmit = async () => {
         setSubmitting(true);
         setError(null);
         try {
             const payload = { ...form };
             if (!payload.dot_number) delete payload.dot_number;
+            if (honeypot) payload.website = honeypot;
             const res = await submitQuote(payload);
             setSuccess(res);
         } catch (e) {
@@ -135,6 +139,17 @@ export default function QuoteModal({ open, onClose, initialRisk = "" }) {
 
                     {!success ? (
                         <>
+                            {/* Honeypot — hidden from real users, bots will fill it */}
+                            <input
+                                type="text"
+                                name="website"
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                                style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}
+                            />
                             {/* Step indicator */}
                             <div className="mb-8">
                                 <div className="flex items-center gap-2 mb-3">

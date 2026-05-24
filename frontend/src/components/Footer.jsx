@@ -65,7 +65,21 @@ export default function Footer() {
                         © {new Date().getFullYear()} Twin Cities Insurance. Serving Minneapolis
                         &amp; Saint Paul, MN.
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 flex-wrap">
+                        <Link
+                            to="/privacy"
+                            className="hover:text-[#D4AF37] transition"
+                            data-testid="footer-privacy"
+                        >
+                            Privacy
+                        </Link>
+                        <Link
+                            to="/terms"
+                            className="hover:text-[#D4AF37] transition"
+                            data-testid="footer-terms"
+                        >
+                            Terms
+                        </Link>
                         <Link
                             to="/admin/login"
                             className="inline-flex items-center gap-1.5 text-[#E5C158] hover:text-[#D4AF37] transition border border-[#D4AF37]/30 hover:border-[#D4AF37] rounded-full px-3 py-1.5"
